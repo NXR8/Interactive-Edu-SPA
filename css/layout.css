@@ -92,6 +92,8 @@
    يظهر فيه نظام Accordion للتصفح
    ------------------------------------------ */
 .sidebar {
+  display: flex;
+  flex-direction: column;
   background-color: var(--color-bg-secondary);
   border-left: 1px solid var(--color-border);  /* حد أيسر (لأن الاتجاه RTL) */
   height: calc(100vh - var(--header-height));

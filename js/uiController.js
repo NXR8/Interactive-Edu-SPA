@@ -20,6 +20,7 @@
     buildNavigationMenu: buildNavigationMenu,
     showContent: showContent,
     showWelcome: showWelcome,
+    showAboutDeveloper: showAboutDeveloper
   };
 
   /* ------------------------------------------
@@ -153,6 +154,21 @@
     });
 
     sidebar.appendChild(nav);
+
+    // إضافة زر عن المطور أسفل القائمة
+    let aboutBtn = sidebar.querySelector('.about-dev-btn');
+    if (!aboutBtn) {
+      const aboutContainer = document.createElement('div');
+      aboutContainer.className = 'about-dev-container';
+      
+      aboutBtn = document.createElement('button');
+      aboutBtn.className = 'about-dev-btn';
+      aboutBtn.innerHTML = '<span class="about-dev-btn__icon">👩‍💻</span> <span class="about-dev-btn__text">عن المطور</span>';
+      aboutBtn.addEventListener('click', showAboutDeveloper);
+      
+      aboutContainer.appendChild(aboutBtn);
+      sidebar.appendChild(aboutContainer);
+    }
   }
 
   /* ------------------------------------------
@@ -522,6 +538,75 @@
           'اختر مادة أو درساً من القائمة الجانبية لعرض المحتوى هنا' +
         '</p>' +
       '</div>';
+  }
+
+  /**
+   * عرض البطاقة التعريفية للمطور
+   */
+  function showAboutDeveloper() {
+    if (!contentArea) return;
+
+    // إغلاق القائمة الجانبية إذا كانت مفتوحة (على الهواتف)
+    if (typeof closeSidebar === 'function') {
+      closeSidebar();
+    }
+
+    // مسح المحتوى السابق
+    contentArea.innerHTML = '';
+
+    // إنشاء شريط العنوان
+    var titleBar = document.createElement('div');
+    titleBar.className = 'content-titlebar';
+
+    var backBtn = document.createElement('button');
+    backBtn.className = 'content-back-btn';
+    backBtn.textContent = '→ تصميم المنصة';
+    backBtn.addEventListener('click', showWelcome);
+
+    var titleText = document.createElement('h2');
+    titleText.className = 'content-titlebar__text';
+    titleText.textContent = 'عن المطور';
+
+    titleBar.appendChild(backBtn);
+    titleBar.appendChild(titleText);
+    contentArea.appendChild(titleBar);
+
+    // توليد البطاقة التعريفية
+    var cardContainer = document.createElement('div');
+    cardContainer.className = 'profile-wrapper';
+
+    cardContainer.innerHTML = `
+      <div class="profile-card">
+        <div class="profile-card__header">
+          <div class="profile-card__icon-wrapper">
+            <svg class="profile-card__header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+              <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+            </svg>
+          </div>
+          <h2 class="profile-card__name">مرح جمال</h2>
+          <p class="profile-card__major">طموح تعليمي لا محدود 🌟</p>
+        </div>
+        <div class="profile-card__body">
+          <div class="profile-card__goal">
+            <h3>الهدف من الموقع</h3>
+            <p>تقديم منصة تعليمية شاملة ومنظمة لمختلف المواد الدراسية، تهدف إلى تيسير وصول الطلاب للمعلومة بطرق تفاعلية مبتكرة، وتوفير بيئة تدعم مسيرتهم الأكاديمية.</p>
+          </div>
+          <div class="profile-card__vision">
+            <h3>الرؤية المستقبلية</h3>
+            <p>يتم العمل حالياً على دمج تقنيات الذكاء الاصطناعي (AI) لتوليد اختبارات ذكية وألغاز يومية مخصصة لكل طالب.</p>
+          </div>
+        </div>
+        <div class="profile-card__footer">
+          <a href="mailto:marahjamal1312@gmail.com" target="_blank" rel="noopener noreferrer" class="profile-btn profile-btn--contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            تواصل معي
+          </a>
+        </div>
+      </div>
+    `;
+
+    contentArea.appendChild(cardContainer);
   }
 
 })();
