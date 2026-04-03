@@ -1,0 +1,704 @@
+/* =============================================
+   components.css — تنسيقات المكونات العامة
+   =============================================
+   هذا الملف يحتوي على:
+   - القائمة المنسدلة (Accordion Navigation Tree)
+   - عناصر الدروس وأزرار الإجراءات
+   - شريط العنوان لمنطقة المحتوى
+   - حاويات الفيديو و PDF
+   - رسائل الخطأ في القائمة الجانبية
+   ============================================= */
+
+
+/* =============================================
+   1. شجرة التنقل (Navigation Tree)
+   ============================================= */
+
+/* حاوية الشجرة الرئيسية */
+.nav-tree {
+  padding: var(--spacing-xs) 0;
+  animation: navFadeIn 0.4s ease;
+}
+
+@keyframes navFadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* =============================================
+   2. مجموعة الـ Accordion
+   ============================================= */
+
+/* حاوية كل مجموعة */
+.accordion-group {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.accordion-group:last-child {
+  border-bottom: none;
+}
+
+
+/* ------------------------------------------
+   رأس المجموعة (Header) - قابل للنقر
+   ------------------------------------------ */
+.accordion-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: right;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  position: relative;
+}
+
+.accordion-header:hover {
+  background: var(--color-bg-hover);
+  color: var(--color-text-heading);
+}
+
+/* تمييز المجموعة المفتوحة */
+.accordion-group--open > .accordion-header {
+  color: var(--color-text-heading);
+  background: rgba(108, 92, 231, 0.06);
+}
+
+
+/* ------------------------------------------
+   مستويات التدرج (Indentation Levels)
+   ------------------------------------------ */
+
+/* المستوى الأول: الصفوف */
+.accordion-header--grade {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  padding: var(--spacing-md) var(--spacing-md);
+  color: var(--color-text-heading);
+}
+
+/* المستوى الثاني: المواد */
+.accordion-header--subject {
+  padding-right: calc(var(--spacing-md) + 12px);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent-primary);
+}
+
+.accordion-group--open > .accordion-header--subject {
+  color: var(--color-accent-primary);
+  background: rgba(108, 92, 231, 0.08);
+}
+
+/* المستوى الثالث: الفصول */
+.accordion-header--semester {
+  padding-right: calc(var(--spacing-md) + 24px);
+  font-size: var(--font-size-sm);
+}
+
+/* المستوى الرابع: الوحدات */
+.accordion-header--unit {
+  padding-right: calc(var(--spacing-md) + 36px);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+
+/* ------------------------------------------
+   سهم الفتح/الإغلاق
+   ------------------------------------------ */
+.accordion-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+  /* السهم يتجه لليسار افتراضياً (RTL) */
+  transform: rotate(0deg);
+}
+
+/* عند فتح المجموعة: السهم يدور 90 درجة */
+.accordion-group--open > .accordion-header > .accordion-arrow {
+  transform: rotate(-90deg);
+  color: var(--color-accent-primary);
+  background: rgba(108, 92, 231, 0.15);
+}
+
+
+/* ------------------------------------------
+   أيقونة العنصر
+   ------------------------------------------ */
+.accordion-icon {
+  font-size: var(--font-size-base);
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+
+/* ------------------------------------------
+   عنوان العنصر
+   ------------------------------------------ */
+.accordion-title {
+  flex: 1;
+  text-align: right;
+  white-space: normal;
+  word-wrap: break-word;
+}
+
+
+/* ------------------------------------------
+   زر إضافي (مثل زر الكتاب)
+   ------------------------------------------ */
+.accordion-extra-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  font-size: var(--font-size-sm);
+  background: rgba(108, 92, 231, 0.1);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.accordion-extra-btn:hover {
+  background: rgba(108, 92, 231, 0.25);
+  transform: scale(1.1);
+}
+
+
+/* ------------------------------------------
+   جسم المجموعة (Body) - المحتوى القابل للطي
+   ------------------------------------------ */
+.accordion-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion-group--open > .accordion-body {
+  grid-template-rows: 1fr;
+}
+
+.accordion-body-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* خط فاصل خفيف على يمين المحتوى الفرعي */
+.accordion-group--open > .accordion-body > .accordion-body-inner {
+  border-right: 2px solid rgba(108, 92, 231, 0.15);
+  margin-right: var(--spacing-md);
+}
+
+
+/* =============================================
+   3. عناصر الدروس (Lesson Items)
+   ============================================= */
+
+.lesson-item {
+  padding: var(--spacing-sm) var(--spacing-md);
+  padding-right: calc(var(--spacing-md) + 48px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  transition: background var(--transition-fast);
+}
+
+.lesson-item:last-child {
+  border-bottom: none;
+}
+
+.lesson-item:hover {
+  background: rgba(108, 92, 231, 0.04);
+}
+
+/* عنوان الدرس */
+.lesson-item__title {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  line-height: 1.5;
+}
+
+/* نقطة ملوّنة بجانب اسم الدرس */
+.lesson-item__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-gradient);
+  flex-shrink: 0;
+}
+
+/* أزرار الإجراءات */
+.lesson-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding-right: calc(6px + var(--spacing-sm)); /* محاذاة مع النقطة */
+}
+
+
+/* =============================================
+   4. أزرار إجراءات الدرس (Action Buttons)
+   ============================================= */
+
+.lesson-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  padding: 3px 8px;
+  font-size: 11px;
+  color: var(--color-text-muted);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.lesson-action-btn:hover {
+  color: var(--color-accent-secondary);
+  border-color: rgba(0, 206, 201, 0.3);
+  background: rgba(0, 206, 201, 0.08);
+  transform: translateY(-1px);
+}
+
+.lesson-action-btn__icon {
+  font-size: 12px;
+  line-height: 1;
+}
+
+.lesson-action-btn__label {
+  font-family: var(--font-family-primary);
+}
+
+
+/* =============================================
+   5. شريط عنوان منطقة المحتوى
+   ============================================= */
+
+.content-titlebar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.content-titlebar__text {
+  flex: 1;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-heading);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* زر العودة */
+.content-back-btn {
+  padding: 6px 14px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.content-back-btn:hover {
+  color: var(--color-accent-primary);
+  border-color: rgba(108, 92, 231, 0.3);
+  background: rgba(108, 92, 231, 0.08);
+}
+
+
+/* =============================================
+   6. حاويات المحتوى (Video, PDF, Quiz)
+   ============================================= */
+
+/* حاوية الفيديو - بنسبة 16:9 */
+.content-video {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* نسبة 16:9 */
+  background: #000;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
+}
+
+.content-video iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
+/* حاوية PDF */
+.content-pdf {
+  flex: 1;
+  min-height: 600px;
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  overflow: hidden;
+}
+
+.content-pdf iframe {
+  width: 100%;
+  height: 100%;
+  min-height: 600px;
+  border: none;
+  background: #fff;
+}
+
+/* عنصر مؤقت للاختبار */
+.content-quiz-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300px;
+  padding: var(--spacing-2xl);
+  text-align: center;
+}
+
+.content-quiz-placeholder__icon {
+  font-size: 48px;
+  margin-bottom: var(--spacing-md);
+}
+
+.content-quiz-placeholder h3 {
+  font-size: var(--font-size-lg);
+  color: var(--color-text-heading);
+  margin-bottom: var(--spacing-sm);
+}
+
+.content-quiz-placeholder p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.content-quiz-placeholder__note {
+  color: var(--color-text-muted) !important;
+  font-size: var(--font-size-xs) !important;
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(116, 185, 255, 0.06);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(116, 185, 255, 0.15);
+}
+
+
+/* =============================================
+   7. رسائل خطأ القائمة الجانبية
+   ============================================= */
+
+.sidebar__error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: var(--spacing-xl) var(--spacing-md);
+  text-align: center;
+  gap: var(--spacing-sm);
+}
+
+.sidebar__error-icon {
+  font-size: 32px;
+}
+
+.sidebar__error-text {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-error);
+}
+
+.sidebar__error-detail {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  word-break: break-all;
+}
+
+.sidebar__error-retry {
+  margin-top: var(--spacing-sm);
+  padding: 8px 20px;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-heading);
+  background: var(--color-bg-hover);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.sidebar__error-retry:hover {
+  background: rgba(108, 92, 231, 0.15);
+  border-color: var(--color-accent-primary);
+}
+
+/* =============================================
+   8. محرك الاختبارات (Quiz Engine)
+   ============================================= */
+.quiz-container {
+  padding: var(--spacing-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.quiz-header h3 {
+  color: var(--color-text-heading);
+  margin-bottom: var(--spacing-xs);
+  font-size: var(--font-size-lg);
+}
+
+.quiz-header p {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.quiz-questions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.quiz-question {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  transition: all var(--transition-fast);
+}
+
+.quiz-question.correct-answer {
+  border-color: #00b894;
+  background: rgba(0, 184, 148, 0.05);
+}
+
+.quiz-question.wrong-answer {
+  border-color: #d63031;
+  background: rgba(214, 48, 49, 0.05);
+}
+
+.quiz-question__title {
+  font-size: var(--font-size-base);
+  color: var(--color-text-heading);
+  margin-bottom: var(--spacing-sm);
+  direction: rtl;
+}
+
+.quiz-options {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  margin-top: var(--spacing-sm);
+}
+
+.quiz-option {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-sm);
+}
+
+.quiz-option:hover {
+  background: var(--color-bg-hover);
+}
+
+.quiz-option input[type="radio"] {
+  accent-color: var(--color-accent-primary);
+  width: 16px;
+  height: 16px;
+}
+
+.highlight-correct {
+  background: rgba(0, 184, 148, 0.15) !important;
+  color: #00b894;
+  font-weight: var(--font-weight-bold);
+  border: 1px dashed #00b894;
+  border-radius: var(--radius-sm);
+}
+
+.quiz-submit-btn {
+  align-self: flex-start;
+  padding: 10px 24px;
+  background: var(--color-accent-primary);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-family: inherit;
+  font-weight: var(--font-weight-bold);
+  cursor: pointer;
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.quiz-submit-btn:hover {
+  background: var(--color-accent-secondary);
+  transform: translateY(-2px);
+}
+
+.quiz-submit-btn:active {
+  transform: translateY(0);
+}
+
+.quiz-result {
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  text-align: center;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.quiz-result--success {
+  background: rgba(0, 184, 148, 0.1);
+  color: #00b894;
+  border: 1px solid rgba(0, 184, 148, 0.3);
+}
+
+.quiz-result--warning {
+  background: rgba(253, 203, 110, 0.1);
+  color: #fdcb6e;
+  border: 1px solid rgba(253, 203, 110, 0.3);
+}
+
+.quiz-result--error {
+  background: rgba(214, 48, 49, 0.1);
+  color: #ff7675;
+  border: 1px solid rgba(214, 48, 49, 0.3);
+}
+
+/* =============================================
+   9. لغز اليوم (Daily Puzzle)
+   ============================================= */
+.daily-puzzle {
+  margin: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: linear-gradient(135deg, rgba(108, 92, 231, 0.08), rgba(0, 206, 201, 0.08));
+  border: 1px solid rgba(108, 92, 231, 0.2);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.daily-puzzle__title {
+  font-size: var(--font-size-md);
+  color: var(--color-text-heading);
+  margin-bottom: var(--spacing-sm);
+  text-align: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: var(--spacing-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.puzzle-question p {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  margin-bottom: var(--spacing-md);
+  text-align: center;
+}
+
+.puzzle-action {
+  text-align: center;
+}
+
+.puzzle-btn {
+  padding: 8px 20px;
+  background: rgba(108, 92, 231, 0.1);
+  color: var(--color-accent-primary);
+  border: 1px solid var(--color-accent-primary);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  font-family: inherit;
+}
+
+.puzzle-btn:hover {
+  background: var(--color-accent-primary);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.puzzle-answer {
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: rgba(0, 0, 0, 0.3);
+  border-right: 3px solid var(--color-accent-secondary);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-heading);
+  animation: fadeIn 0.3s ease;
+}
+
+.puzzle-answer strong {
+  color: var(--color-accent-secondary);
+}
+
+.puzzle-error-msg {
+  color: var(--color-text-muted);
+  text-align: center;
+  font-size: var(--font-size-xs);
+}
+
+/* =============================================
+   10. إصلاح التفاف النص في المنطقة الوسطى
+   ============================================= */
+.content-titlebar__text,
+.quiz-header h3,
+.quiz-header p,
+.quiz-question__title,
+.quiz-option span,
+.content-quiz-placeholder h3,
+.content-quiz-placeholder p,
+.content-area__placeholder-text {
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.content-video iframe,
+.content-pdf iframe {
+  max-width: 100%;
+  box-sizing: border-box;
+}

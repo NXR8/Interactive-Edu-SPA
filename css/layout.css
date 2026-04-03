@@ -1,0 +1,215 @@
+/* =============================================
+   layout.css — تخطيط الشاشة بنظام CSS Grid
+   =============================================
+   هذا الملف يحتوي على:
+   - تقسيم الشاشة الرئيسي إلى 3 أعمدة (Grid)
+   - تنسيقات كل عمود على حدة
+   - الشريط العلوي (Header)
+   ============================================= */
+
+/* ------------------------------------------
+   الحاوية الرئيسية - الشبكة (Main Grid)
+   ------------------------------------------
+   التقسيم:
+   ┌──────────────────────────────────────────────────┐
+   │                 الشريط العلوي (Header)            │
+   ├────────────┬──────────────────────┬───────────────┤
+   │  العمود     │  منطقة المحتوى       │  العمود       │
+   │  الأيمن     │  الوسطى             │  الأيسر       │
+   │  (القائمة)  │  (Content Area)     │  (الأدوات)    │
+   ├────────────┼──────────────────────┼───────────────┤
+   │  280px     │  1fr (مرن)          │  320px        │
+   └────────────┴──────────────────────┴───────────────┘
+   ------------------------------------------ */
+
+/* الحاوية الأم التي تلف كامل التطبيق */
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ------------------------------------------
+   الشريط العلوي (Header / Top Bar)
+   ------------------------------------------ */
+.app-header {
+  height: var(--header-height);
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--spacing-lg);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(22, 22, 37, 0.85);
+}
+
+/* شعار/اسم المنصة */
+.app-header__logo {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-heading);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+/* أيقونة الشعار - تدرج لوني */
+.app-header__logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--color-accent-gradient);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-md);
+}
+
+/* ------------------------------------------
+   منطقة المحتوى الرئيسية - الشبكة (Grid)
+   ------------------------------------------
+   تقسيم 3 أعمدة:
+   - الأيمن: القائمة الجانبية (عرض ثابت)
+   - الأوسط: منطقة العرض (عرض مرن)
+   - الأيسر: الأدوات/الآلة الحاسبة (عرض ثابت)
+   ------------------------------------------ */
+.app-main {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr var(--tools-width);
+  flex: 1; /* يملأ باقي ارتفاع الشاشة تحت الشريط العلوي */
+  overflow: hidden;
+}
+
+/* ------------------------------------------
+   العمود الأيمن - القائمة الجانبية (Sidebar)
+   ------------------------------------------
+   يحتوي على شجرة المواد والدروس
+   يظهر فيه نظام Accordion للتصفح
+   ------------------------------------------ */
+.sidebar {
+  background-color: var(--color-bg-secondary);
+  border-left: 1px solid var(--color-border);  /* حد أيسر (لأن الاتجاه RTL) */
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  padding: var(--spacing-lg) 0;
+  position: sticky;
+  top: var(--header-height);
+  transition: transform var(--transition-slow);
+}
+
+/* عنوان القائمة الجانبية */
+.sidebar__title {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 0 var(--spacing-lg) var(--spacing-md);
+  border-bottom: 1px solid var(--color-divider);
+  margin-bottom: var(--spacing-md);
+}
+
+/* المحتوى الوسيط - نص مؤقت */
+.sidebar__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  text-align: center;
+  padding: var(--spacing-lg);
+}
+
+/* ------------------------------------------
+   العمود الأوسط - منطقة المحتوى (Content Area)
+   ------------------------------------------
+   المنطقة الديناميكية التي يتغير محتواها
+   بناءً على اختيار المستخدم من القائمة الجانبية
+   ------------------------------------------ */
+.content-area {
+  background-color: var(--color-bg-content);
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  padding: var(--spacing-xl);
+  position: relative;
+}
+
+/* الحالة الافتراضية - رسالة ترحيب أو نص مؤقت */
+.content-area__placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: var(--color-text-muted);
+  text-align: center;
+  gap: var(--spacing-md);
+}
+
+.content-area__placeholder-icon {
+  font-size: 3rem;
+  opacity: 0.4;
+  animation: float 3s ease-in-out infinite;
+}
+
+.content-area__placeholder-text {
+  font-size: var(--font-size-lg);
+  max-width: 400px;
+  line-height: 1.8;
+}
+
+/* ------------------------------------------
+   العمود الأيسر - الأدوات (Tools Panel)
+   ------------------------------------------
+   يحتوي على الآلة الحاسبة العلمية الثابتة
+   ------------------------------------------ */
+.tools-panel {
+  background-color: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border); /* حد أيمن (لأن الاتجاه RTL) */
+  height: calc(100vh - var(--header-height));
+  overflow-y: auto;
+  padding: var(--spacing-lg);
+  position: sticky;
+  top: var(--header-height);
+}
+
+/* عنوان لوحة الأدوات */
+.tools-panel__title {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-divider);
+  margin-bottom: var(--spacing-lg);
+}
+
+/* المحتوى المؤقت */
+.tools-panel__placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100% - 60px);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-md);
+  text-align: center;
+  padding: var(--spacing-lg);
+}
+
+
+/* ------------------------------------------
+   حركة بسيطة للعنصر المؤقت (Float Animation)
+   ------------------------------------------ */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}

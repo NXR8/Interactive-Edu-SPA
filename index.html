@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ===== معلومات التعريف (SEO Meta) ===== -->
+  <title>المنصة التعليمية التفاعلية</title>
+  <meta name="description"
+    content="منصة تعليمية تفاعلية تدعم عرض الفيديوهات، ملفات PDF، اختبارات سريعة، ألغاز يومية، وآلة حاسبة علمية مدمجة.">
+  <meta name="theme-color" content="#0f0f1a">
+
+  <!-- ===== استيراد الخطوط من Google Fonts ===== -->
+  <!-- خط Tajawal: خط عربي أنيق يدعم جميع الأوزان -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+    rel="stylesheet">
+
+  <!-- ===== ربط ملفات CSS ===== -->
+  <!-- 1. المتغيرات الأساسية والإعدادات العامة -->
+  <link rel="stylesheet" href="css/main.css">
+  <!-- 2. تخطيط الشبكة والأعمدة الثلاثة -->
+  <link rel="stylesheet" href="css/layout.css">
+  <!-- 3. تنسيق الآلة الحاسبة العلمية وأداة حل المعادلات -->
+  <link rel="stylesheet" href="css/calculator.css">
+  <!-- 4. تنسيق المكونات العامة (القوائم المنسدلة، أزرار الإجراءات) -->
+  <!-- 4. تنسيق المكونات العامة (القوائم المنسدلة، أزرار الإجراءات) -->
+  <link rel="stylesheet" href="css/components.css">
+  <!-- 5. تنسيقات التجاوب مع شاشات الهواتف المحمولة -->
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <!-- ===== مكتبة Nerdamer.js للحسابات الرمزية (Symbolic Math) ===== -->
+  <!-- تُستخدم حصرياً لأداة حل المعادلات - باقي الموقع يعمل بـ Vanilla JS -->
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/nerdamer.core.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Algebra.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Calculus.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/nerdamer@latest/Solve.js" defer></script>
+</head>
+
+<body>
+
+  <!-- ===== الحاوية الرئيسية للتطبيق ===== -->
+  <div class="app-wrapper">
+
+    <!-- ===== الشريط العلوي (Header) ===== -->
+    <header class="app-header" id="app-header">
+      <!-- شعار واسم المنصة -->
+      <div class="app-header__logo">
+        <button id="hamburger-btn" aria-label="القائمة" title="إظهار/إخفاء القائمة">☰</button>
+        <span class="app-header__logo-icon">📚</span>
+        <span>المنصة التعليمية</span>
+      </div>
+    </header>
+
+    <!-- ===== منطقة المحتوى الرئيسية - مقسّمة إلى 3 أعمدة ===== -->
+    <!--
+      التقسيم (من اليمين لليسار بسبب RTL):
+      ┌────────────┬──────────────────────┬───────────────┐
+      │  القائمة    │  منطقة المحتوى       │  الآلة        │
+      │  الجانبية   │  الوسطى             │  الحاسبة      │
+      │  (280px)   │  (مرن - 1fr)        │  (320px)      │
+      └────────────┴──────────────────────┴───────────────┘
+    -->
+    <main class="app-main" id="app-main">
+
+      <!-- ===== العمود الأيمن: القائمة الجانبية ===== -->
+      <!-- يحتوي على شجرة المواد والدروس بنظام Accordion -->
+      <aside class="sidebar" id="sidebar">
+        <h2 class="sidebar__title">📂 تصفّح المواد</h2>
+        <!-- يتم بناء شجرة المواد ديناميكياً عبر uiController.js و app.js -->
+        <!-- شجرة التنقل ستُضاف هنا برمجياً بعد تحميل curriculum.json -->
+        <div class="sidebar__placeholder">
+          <p>⏳ جاري تحميل المواد...</p>
+        </div>
+      </aside>
+
+      <!-- ===== العمود الأوسط: منطقة عرض المحتوى ===== -->
+      <!-- المنطقة الديناميكية: تعرض فيديوهات، PDFs، اختبارات، أو لغز اليوم -->
+      <section class="content-area" id="content-area">
+        <!-- محتوى مؤقت - سيتم استبداله ديناميكياً عبر الجافاسكربت -->
+        <div class="content-area__placeholder">
+          <span class="content-area__placeholder-icon">🎓</span>
+          <p class="content-area__placeholder-text">
+            منطقة المحتوى<br>
+            اختر مادة أو درساً من القائمة الجانبية لعرض المحتوى هنا
+          </p>
+        </div>
+      </section>
+
+      <!-- ===== العمود الأيسر: لوحة الأدوات (الآلة الحاسبة) ===== -->
+      <!-- يحتوي على الآلة الحاسبة العلمية الثابتة -->
+      <aside class="tools-panel" id="tools-panel">
+
+        <!-- ===== لغز اليوم ===== -->
+        <div class="daily-puzzle" id="daily-puzzle-container">
+          <h3 class="daily-puzzle__title">🧩 لغز اليوم</h3>
+          <div id="daily-puzzle-content">
+            <p>⏳ جاري تحميل اللغز...</p>
+          </div>
+        </div>
+
+        <h2 class="tools-panel__title">🔢 الآلة الحاسبة</h2>
+
+        <!-- ===== بداية حاوية الآلة الحاسبة ===== -->
+        <div class="calculator" id="calculator">
+
+          <!-- ── شاشة العرض ── -->
+          <!-- السطر العلوي: التعبير الرياضي الكامل -->
+          <!-- السطر السفلي: النتيجة أو الرقم الحالي -->
+          <div class="calc-display">
+            <!-- مؤشر وضع الزوايا (درجات/راديان) - قابل للنقر -->
+            <span class="calc-angle-indicator" id="calc-angle-indicator">DEG</span>
+            <div class="calc-display__expression" id="calc-expression"></div>
+            <div class="calc-display__result" id="calc-result">0</div>
+          </div>
+
+          <!-- ── أزرار التبديل بين الوضع العلمي والبسيط ── -->
+          <div class="calc-modes">
+            <button class="calc-modes__btn calc-modes__btn--active" data-mode="scientific">علمي</button>
+            <button class="calc-modes__btn" data-mode="basic">بسيط</button>
+          </div>
+
+          <!-- ── أزرار الدوال العلمية (تظهر في الوضع العلمي فقط) ── -->
+          <!-- شبكة 5 أعمدة تحتوي دوال مثلثية، لوغاريتمات، جذور، ثوابت -->
+          <div class="calc-scientific calc-scientific--visible" id="calc-scientific">
+            <!-- الصف الأول: الدوال المثلثية -->
+            <button class="calc-btn calc-btn--scientific" data-action="sin">sin</button>
+            <button class="calc-btn calc-btn--scientific" data-action="cos">cos</button>
+            <button class="calc-btn calc-btn--scientific" data-action="tan">tan</button>
+            <button class="calc-btn calc-btn--scientific" data-action="log">log</button>
+            <button class="calc-btn calc-btn--scientific" data-action="ln">ln</button>
+            <!-- الصف الثاني: الدوال المثلثية العكسية -->
+            <button class="calc-btn calc-btn--scientific" data-action="asin">sin⁻¹</button>
+            <button class="calc-btn calc-btn--scientific" data-action="acos">cos⁻¹</button>
+            <button class="calc-btn calc-btn--scientific" data-action="atan">tan⁻¹</button>
+            <button class="calc-btn calc-btn--scientific" data-action="square">x²</button>
+            <button class="calc-btn calc-btn--scientific" data-action="cube">x³</button>
+            <!-- الصف الثالث: الجذور والأُسُس والثوابت -->
+            <button class="calc-btn calc-btn--scientific" data-action="sqrt">√</button>
+            <button class="calc-btn calc-btn--scientific" data-action="cbrt">∛</button>
+            <button class="calc-btn calc-btn--scientific" data-action="power">xʸ</button>
+            <button class="calc-btn calc-btn--scientific" data-action="pi">π</button>
+            <button class="calc-btn calc-btn--scientific" data-action="euler">e</button>
+            <!-- الصف الرابع: دوال إضافية -->
+            <button class="calc-btn calc-btn--scientific" data-action="factorial">x!</button>
+            <button class="calc-btn calc-btn--scientific" data-action="inverse">1/x</button>
+            <button class="calc-btn calc-btn--scientific" data-action="abs">|x|</button>
+            <button class="calc-btn calc-btn--scientific" data-action="exp">eˣ</button>
+            <button class="calc-btn calc-btn--scientific" data-action="tenPow">10ˣ</button>
+          </div>
+
+          <!-- ── أزرار العمليات الأساسية والأرقام ── -->
+          <!-- شبكة 4 أعمدة × 5 صفوف -->
+          <div class="calc-grid">
+            <!-- الصف الأول: مسح، أقواس، نسبة مئوية، قسمة -->
+            <button class="calc-btn calc-btn--function" data-action="clear">AC</button>
+            <button class="calc-btn calc-btn--function" data-action="parens">( )</button>
+            <button class="calc-btn calc-btn--function" data-action="percent">%</button>
+            <button class="calc-btn calc-btn--operator" data-action="divide">÷</button>
+
+            <!-- الصف الثاني: 7, 8, 9, ضرب -->
+            <button class="calc-btn calc-btn--number" data-value="7">7</button>
+            <button class="calc-btn calc-btn--number" data-value="8">8</button>
+            <button class="calc-btn calc-btn--number" data-value="9">9</button>
+            <button class="calc-btn calc-btn--operator" data-action="multiply">×</button>
+
+            <!-- الصف الثالث: 4, 5, 6, طرح -->
+            <button class="calc-btn calc-btn--number" data-value="4">4</button>
+            <button class="calc-btn calc-btn--number" data-value="5">5</button>
+            <button class="calc-btn calc-btn--number" data-value="6">6</button>
+            <button class="calc-btn calc-btn--operator" data-action="subtract">−</button>
+
+            <!-- الصف الرابع: 1, 2, 3, جمع -->
+            <button class="calc-btn calc-btn--number" data-value="1">1</button>
+            <button class="calc-btn calc-btn--number" data-value="2">2</button>
+            <button class="calc-btn calc-btn--number" data-value="3">3</button>
+            <button class="calc-btn calc-btn--operator" data-action="add">+</button>
+
+            <!-- الصف الخامس: تبديل الإشارة، صفر، فاصلة عشرية، مساواة -->
+            <button class="calc-btn calc-btn--function" data-action="sign">±</button>
+            <button class="calc-btn calc-btn--number" data-value="0">0</button>
+            <button class="calc-btn calc-btn--number" data-action="decimal">.</button>
+            <button class="calc-btn calc-btn--equals" data-action="equals">=</button>
+
+            <!-- صف إضافي: زر الحذف (Backspace) -->
+            <button class="calc-btn calc-btn--delete" data-action="delete" style="grid-column: span 4;">⌫ مسح
+              حرف</button>
+          </div>
+
+        </div>
+        <!-- ===== نهاية حاوية الآلة الحاسبة ===== -->
+
+        <!-- ===== أداة إيجاد قيم (س) - Equation Solver ===== -->
+        <!-- تستخدم مكتبة Nerdamer لحل المعادلات الجبرية رمزياً -->
+        <div class="eq-solver" id="eq-solver">
+
+          <!-- عنوان القسم -->
+          <div class="eq-solver__header">
+            <span class="eq-solver__icon">🔰</span>
+            <span class="eq-solver__title">أوجد قيمة (س)</span>
+          </div>
+
+          <!-- جسم أداة الحل -->
+          <div class="eq-solver__body">
+
+            <!-- حقل إدخال المعادلة -->
+            <div class="eq-input-wrapper">
+              <input type="text" class="eq-input" id="eq-input" placeholder="اكتب المعادلة هنا... مثال: 2س² - 8 = 0"
+                autocomplete="off" spellcheck="false">
+              <p class="eq-input-hint">يمكنك استخدام <code>س</code> أو <code>x</code> كمتغير، و <code>^</code> للأُس</p>
+            </div>
+
+            <!-- أزرار التحكم -->
+            <div class="eq-buttons">
+              <button class="eq-solve-btn" id="eq-solve-btn">
+                ⚡ أوجد قيمة س
+              </button>
+              <button class="eq-clear-btn" id="eq-clear-btn">
+                مسح
+              </button>
+            </div>
+
+            <!-- أمثلة سريعة -->
+            <div class="eq-examples-section">
+              <span class="eq-examples-label">💡 أمثلة:</span>
+              <div class="eq-examples" id="eq-examples">
+                <!-- يتم توليد الأمثلة برمجياً عبر equationSolver.js -->
+              </div>
+            </div>
+
+            <!-- منطقة عرض النتائج -->
+            <div class="eq-result-area" id="eq-result-area"></div>
+
+          </div>
+
+        </div>
+        <!-- ===== نهاية أداة حل المعادلات ===== -->
+
+      </aside>
+
+    </main>
+    <!-- ===== نهاية منطقة المحتوى الرئيسية ===== -->
+
+  </div>
+  <!-- ===== نهاية الحاوية الرئيسية ===== -->
+
+  <!-- ===== ربط ملفات JavaScript ===== -->
+  <!-- الآلة الحاسبة العلمية - مستقلة ومغلّفة في IIFE -->
+  <script src="js/calculator.js"></script>
+  <!-- أداة حل المعادلات - تعتمد على Nerdamer المحمّلة في الـ head -->
+  <script src="js/equationSolver.js"></script>
+  <!-- بيانات المنهج (كحل بديل في حال فحص الـ Fetch API بسبب CORS) -->
+  <script src="js/curriculumData.js"></script>
+  <!-- التحكم بالواجهة - بناء القائمة الجانبية وعرض المحتوى -->
+  <script src="js/uiController.js"></script>
+  <!-- محرك الاختبارات ولغز اليوم -->
+  <script src="js/quizEngine.js"></script>
+  <script src="js/dailyPuzzle.js"></script>
+  <!-- نقطة الدخول الرئيسية - تحميل البيانات وربط المكونات -->
+  <script src="js/app.js"></script>
+</body>
+
+</html>

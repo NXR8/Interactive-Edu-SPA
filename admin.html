@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم | المنصة التعليمية</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+  <!-- الشريط العلوي والتنقل -->
+  <header class="admin-header">
+    <div class="admin-header__logo">
+      <span>⚙️ لوحة التحكم - المنصة التعليمية</span>
+    </div>
+    <div class="admin-tabs">
+      <button class="tab-btn active" data-tab="curriculum-tab">إدارة المنهج</button>
+      <button class="tab-btn" data-tab="puzzles-tab">إدارة الألغاز</button>
+    </div>
+    <div class="admin-actions">
+      <button class="export-btn" id="export-curriculum-btn">💾 تصدير المنهج</button>
+      <button class="export-btn" id="export-puzzles-btn">💾 تصدير الألغاز</button>
+      <a href="index.html" class="back-home-btn">🏠 العودة للموقع</a>
+    </div>
+  </header>
+
+  <!-- حاوية المحتوى الرئيسي -->
+  <main class="admin-main">
+    
+    <!-- تبويب إدارة المنهج -->
+    <section id="curriculum-tab" class="tab-content active">
+      <div class="panel-header">
+        <h2>شجرة المنهج (curriculum.json)</h2>
+        <button class="add-node-btn" onclick="adminApp.addGrade()">+ إضافة صف جديد</button>
+      </div>
+      <div id="curriculum-tree-container" class="tree-container">
+        <p class="loading-msg">جاري تحميل المنهج...</p>
+      </div>
+    </section>
+
+    <!-- تبويب إدارة الألغاز -->
+    <section id="puzzles-tab" class="tab-content">
+      <div class="panel-header">
+        <h2>قائمة ألغاز اليوم (puzzles.json)</h2>
+        <button class="add-node-btn" onclick="adminApp.openPuzzleModal()">+ إضافة لغز جديد</button>
+      </div>
+      <div id="puzzles-list-container" class="puzzles-grid">
+        <p class="loading-msg">جاري تحميل الألغاز...</p>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ===============================
+       نوافذ التعديل (Modals)
+       =============================== -->
+
+  <!-- Modal تعديل الهيكل (اسم، أيقونة) -->
+  <div id="basic-node-modal" class="modal">
+    <div class="modal-content">
+      <h3 id="basic-modal-title">تعديل العنصر</h3>
+      <div class="form-group">
+        <label>المعرّف (ID):</label>
+        <input type="text" id="node-id" class="id-input">
+        <small id="node-id-feedback" class="feedback-msg"></small>
+      </div>
+      <div class="form-group">
+        <label>الاسم/العنوان:</label>
+        <input type="text" id="node-name">
+      </div>
+      <div class="form-group" id="node-icon-group">
+        <label>الأيقونة (اختياري - للصف والمادة):</label>
+        <input type="text" id="node-icon" placeholder="مثال: 🧮">
+      </div>
+      <div class="form-group" id="node-book-group" style="display: none;">
+        <label>رابط كتاب المادة (PDF):</label>
+        <input type="url" id="node-book" placeholder="https://example.com/book.pdf">
+      </div>
+      <div class="modal-actions">
+        <button class="save-btn" onclick="adminApp.saveBasicNode()">حفظ</button>
+        <button class="cancel-btn" onclick="adminApp.closeModal('basic-node-modal')">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal تعديل الدرس وروابطه واختباراته -->
+  <div id="lesson-modal" class="modal modal-large">
+    <div class="modal-content">
+      <h3 id="lesson-modal-title">تعديل الدرس</h3>
+      
+      <div class="lesson-tabs">
+        <button class="lesson-tab-btn active" data-ltab="lesson-info">المعلومات الأساسية</button>
+        <button class="lesson-tab-btn" data-ltab="lesson-quiz">الأسئلة (Quiz)</button>
+      </div>
+
+      <div id="lesson-info" class="lesson-tab-content active">
+        <div class="form-group">
+          <label>المعرّف (ID):</label>
+          <input type="text" id="lesson-id" class="id-input">
+          <small id="lesson-id-feedback" class="feedback-msg"></small>
+        </div>
+        <div class="form-group">
+          <label>عنوان الدرس:</label>
+          <input type="text" id="lesson-title">
+        </div>
+        <div class="form-group">
+          <label>رابط الفيديو (Video URL):</label>
+          <input type="url" id="lesson-video" placeholder="https://youtube.com/embed/...">
+        </div>
+        <div class="form-group">
+          <label>رابط الملخص (Summary PDF):</label>
+          <input type="url" id="lesson-summary" placeholder="https://...">
+        </div>
+        <div class="form-group">
+          <label>رابط امتحانات سابقة (Past Exams PDF):</label>
+          <input type="url" id="lesson-exams" placeholder="https://...">
+        </div>
+      </div>
+
+      <div id="lesson-quiz" class="lesson-tab-content">
+        <div class="quiz-manager-header">
+          <h4>أسئلة الدرس</h4>
+          <button type="button" class="add-sm-btn" onclick="adminApp.addQuestionToCurrentLesson()">+ إضافة سؤال</button>
+        </div>
+        <div id="quiz-questions-container">
+          <!-- الأسئلة تضاف ديناميكياً هنا -->
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="save-btn" onclick="adminApp.saveLesson()">حفظ الدرس</button>
+        <button class="cancel-btn" onclick="adminApp.closeModal('lesson-modal')">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal إضافة تعديل لغز -->
+  <div id="puzzle-modal" class="modal">
+    <div class="modal-content">
+      <h3 id="puzzle-modal-title">إضافة/تعديل لغز</h3>
+      <div class="form-group">
+        <label>تاريخ اللغز (YYYY-MM-DD):</label>
+        <input type="date" id="puzzle-date">
+      </div>
+      <div class="form-group">
+        <label>السؤال:</label>
+        <textarea id="puzzle-question" rows="3"></textarea>
+      </div>
+      <div class="form-group">
+        <label>الإجابة:</label>
+        <input type="text" id="puzzle-answer">
+      </div>
+      <div class="modal-actions">
+        <button class="save-btn" onclick="adminApp.savePuzzle()">حفظ</button>
+        <button class="cancel-btn" onclick="adminApp.closeModal('puzzle-modal')">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/admin.js"></script>
+</body>
+</html>

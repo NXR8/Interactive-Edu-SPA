@@ -1,0 +1,373 @@
+/* =============================================
+   admin.css — تنسيقات لوحة التحكم
+   ============================================= */
+
+body {
+  margin: 0;
+  font-family: 'Tajawal', sans-serif;
+  background-color: var(--color-bg-primary, #0f0f1a);
+  color: var(--color-text-primary, #e2e2e2);
+  direction: rtl;
+}
+
+/* ================== Header ================== */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-bg-secondary, #161625);
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--color-border, rgba(255,255,255,0.1));
+}
+
+.admin-header__logo {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+}
+
+.tab-btn, .lesson-tab-btn {
+  background: transparent;
+  color: #ccc;
+  border: 1px solid transparent;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: 0.2s;
+}
+
+.tab-btn.active, .lesson-tab-btn.active {
+  background: rgba(108, 92, 231, 0.2);
+  color: #fff;
+  border-color: #6c5ce7;
+}
+
+.admin-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.export-btn, .add-node-btn, .add-sm-btn {
+  background: #00b894;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.back-home-btn {
+  background: #d63031;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  text-decoration: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* ================== Main Content ================== */
+.admin-main {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+.tab-content {
+  display: none;
+}
+.tab-content.active {
+  display: block;
+}
+
+.panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ================== Tree View ================== */
+.tree-container {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.tree-node {
+  margin: 5px 0;
+}
+
+.tree-node-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 4px;
+  border-right: 3px solid #6c5ce7;
+  transition: 0.2s;
+}
+
+.tree-node-header:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.tree-node-title {
+  flex: 1;
+  font-weight: 500;
+}
+
+.node-actions {
+  display: flex;
+  gap: 5px;
+}
+
+.node-actions button {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #fff;
+  padding: 4px 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 12px;
+}
+.node-actions button.btn-edit { background: #0984e3; }
+.node-actions button.btn-add { background: #00b894; }
+.node-actions button.btn-delete { background: #d63031; }
+
+.tree-children {
+  margin-right: 20px;
+  padding-right: 10px;
+  border-right: 1px rgba(255,255,255,0.1) dashed;
+  display: none; /* مخفي افتراضياً */
+}
+
+.tree-children.open {
+  display: block; /* يظهر عند إضافة كلاس open */
+}
+
+.tree-node-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  color: #a29bfe;
+  font-size: 14px;
+  user-select: none;
+}
+
+.tree-node-toggle.open {
+  transform: rotate(90deg); /* تدوير السهم للأسفل عند الفتح */
+}
+
+/* عمود المؤشر للمستويات المختلفة لا يظهر إلا لو كان الأبناء ظاهرين أو للجمالية */
+/* Levels Colors */
+.level-grade > .tree-node-header { border-right-color: #6c5ce7; }
+.level-subject > .tree-node-header { border-right-color: #00cec9; }
+.level-semester > .tree-node-header { border-right-color: #fdcb6e; }
+.level-unit > .tree-node-header { border-right-color: #e17055; }
+.level-lesson > .tree-node-header { border-right-color: #00b894; }
+
+/* ================== Modals ================== */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.6);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal.active {
+  display: flex;
+}
+
+.modal-content {
+  background: #1e1e2d;
+  width: 90%;
+  max-width: 500px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-large .modal-content {
+  max-width: 800px;
+}
+
+.modal-content h3 {
+  margin-top: 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.form-group input, .form-group textarea, .form-group select {
+  width: 100%;
+  padding: 8px 10px;
+  background: rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #fff;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.modal-actions .save-btn { background: #00b894; color: #fff; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; }
+.modal-actions .cancel-btn { background: #636e72; color: #fff; border: none; padding: 8px 20px; border-radius: 4px; cursor: pointer; }
+
+/* ================== Lesson Quiz Manager ================== */
+.lesson-tabs {
+  display: flex;
+  margin-bottom: 15px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.lesson-tab-content { display: none; }
+.lesson-tab-content.active { display: block; }
+
+.quiz-manager-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.quiz-question-box {
+  background: rgba(255,255,255,0.02);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.delete-question-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #d63031;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+.options-list {
+  margin-top: 10px;
+  padding-right: 15px;
+  border-right: 2px solid #6c5ce7;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+.option-item input[type="text"] { flex: 1; }
+.option-item input[type="radio"] { width: auto; }
+
+/* ================== Puzzles List ================== */
+.puzzles-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.puzzle-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 15px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.puzzle-card-date {
+  font-size: 0.8rem;
+  color: #00cec9;
+  margin-bottom: 5px;
+}
+
+.puzzle-card-q {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.puzzle-card-a {
+  color: #00b894;
+  font-size: 0.9rem;
+}
+
+.puzzle-card-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+/* ================== ID Validation ================== */
+.id-input {
+  font-family: 'IBM Plex Mono', monospace, sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.id-input.is-invalid {
+  border-color: #d63031 !important;
+  background: rgba(214, 48, 49, 0.1) !important;
+}
+
+.id-input.is-valid {
+  border-color: #00b894 !important;
+  background: rgba(0, 184, 148, 0.1) !important;
+}
+
+.feedback-msg {
+  display: block;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+.feedback-msg.error {
+  color: #ff7675;
+}
+
+.feedback-msg.success {
+  color: #55efc4;
+}
