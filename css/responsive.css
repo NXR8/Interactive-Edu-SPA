@@ -1,0 +1,99 @@
+/* =============================================
+   responsive.css — التجاوب مع شاشات الهواتف المحمولة
+   ============================================= */
+
+/* إخفاء زر الهامبرجر بشكل افتراضي على الشاشات الكبيرة */
+#hamburger-btn {
+  display: none;
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  color: var(--color-text-heading);
+  cursor: pointer;
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin-left: var(--spacing-sm);
+  transition: color var(--transition-fast);
+}
+
+#hamburger-btn:hover {
+  color: var(--color-accent-primary);
+}
+
+/* تنسيقات الشاشات الصغيرة (768px وأقل) */
+@media (max-width: 768px) {
+  /* إظهار زر الهامبرجر */
+  #hamburger-btn {
+    display: inline-block;
+  }
+
+  /* إخفاء العمود الأيسر (لوحة الأدوات/الآلة الحاسبة وغيرها) */
+  #tools-panel {
+    display: none;
+  }
+
+  /* تحويل العمود الأوسط ليشغل عرض الشاشة بالكامل */
+  .app-main {
+    /* الشبكة الأصلية كانت 3 أعمدة، نغيرها لعمود واحد مرن */
+    display: flex;
+  }
+  
+  #content-area {
+    flex: 1;
+    width: 100%;
+    padding: var(--spacing-sm); /* تقليل المسافات الداخلية للشاشات الصغيرة */
+    overflow-x: hidden; /* ضمان عدم تجاوز المحتوى للإطار الجانبي */
+  }
+
+  /* تحويل القائمة الجانبية (الأيمن) إلى Sidebar طافية/مخفية */
+  #sidebar {
+    position: fixed;
+    top: var(--header-height);
+    right: 0;
+    width: 100vw;
+    height: calc(100vh - var(--header-height));
+    background: var(--color-bg-secondary);
+    z-index: 1000;
+    /* إزاحة للخارج افتراضيا (بما أن الاتجاه RTL فهي تنزاح لليمين إيجابياً للوصول للخارج) */
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+    overflow-y: auto;
+  }
+
+  /* إظهار القائمة الجانبية عند إضافة هذا الكلاس */
+  #sidebar.sidebar--open {
+    transform: translateX(0);
+  }
+
+  /* الخلفية المعتمة خلف القائمة */
+  .sidebar-overlay {
+    position: fixed;
+    top: var(--header-height);
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - var(--header-height));
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 990; /* أقل من القائمة الجانبية (1000) */
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+
+  .sidebar-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* تقليل أحجام الخطوط في المنطقة الوسطى لتناسب الشاشات الصغيرة */
+  .content-titlebar__text {
+    font-size: 14px;
+  }
+
+  .quiz-header h3 {
+    font-size: 18px;
+  }
+
+  .quiz-question__title {
+    font-size: 14px;
+  }
+}

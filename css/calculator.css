@@ -1,0 +1,696 @@
+/* =============================================
+   calculator.css — تنسيق الآلة الحاسبة العلمية
+   =============================================
+   هذا الملف يحتوي على:
+   - تنسيق حاوية الآلة الحاسبة
+   - شاشة العرض (Display)
+   - شبكة الأزرار (CSS Grid)
+   - تصنيفات الأزرار (أرقام، عمليات، علمية)
+   - تأثيرات الحركة والتفاعل
+   ============================================= */
+
+/* ------------------------------------------
+   حاوية الآلة الحاسبة الرئيسية
+   ------------------------------------------ */
+.calculator {
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  max-width: 100%;
+  /* تأثير التوهج البنفسجي الخفيف */
+  box-shadow:
+    var(--shadow-lg),
+    0 0 40px rgba(108, 92, 231, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+/* ------------------------------------------
+   شاشة العرض (Display)
+   ------------------------------------------ */
+.calc-display {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: linear-gradient(180deg, #12121f 0%, #161629 100%);
+  border-bottom: 1px solid var(--color-border);
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end; /* محاذاة الأرقام لليسار (نهاية السطر في RTL) */
+  gap: var(--spacing-xs);
+  position: relative;
+  overflow: hidden;
+}
+
+/* خط خافت في أعلى الشاشة للزينة */
+.calc-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: var(--color-accent-gradient);
+  opacity: 0.4;
+}
+
+/* السطر العلوي - يعرض المعادلة/التعبير الكامل */
+.calc-display__expression {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  min-height: 1.4em;
+  direction: ltr;       /* الأرقام والمعادلات دائماً من اليسار لليمين */
+  text-align: right;
+  width: 100%;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+/* السطر السفلي - يعرض النتيجة / الرقم الحالي */
+.calc-display__result {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-heading);
+  direction: ltr;
+  text-align: right;
+  width: 100%;
+  word-break: break-all;
+  line-height: 1.2;
+  transition: font-size var(--transition-fast);
+}
+
+/* تصغير الخط عندما يكون الناتج طويلاً */
+.calc-display__result--small {
+  font-size: var(--font-size-xl);
+}
+
+
+/* ------------------------------------------
+   منطقة أزرار التبديل (Mode Toggle)
+   ------------------------------------------ */
+.calc-modes {
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  background: var(--color-bg-primary);
+}
+
+.calc-modes__btn {
+  flex: 1;
+  padding: 6px var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  background: transparent;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  text-align: center;
+}
+
+.calc-modes__btn:hover {
+  color: var(--color-text-secondary);
+  background: var(--color-bg-hover);
+}
+
+.calc-modes__btn--active {
+  color: var(--color-text-heading);
+  background: var(--color-bg-card);
+  box-shadow: var(--shadow-sm);
+}
+
+
+/* ------------------------------------------
+   شبكة الأزرار العلمية (Scientific Buttons)
+   ------------------------------------------ */
+.calc-scientific {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2px;
+  padding: 4px;
+  background: var(--color-bg-primary);
+  /* مخفي افتراضياً - يظهر عند تفعيل الوضع العلمي */
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height var(--transition-slow), padding var(--transition-slow);
+}
+
+/* عند تفعيل الوضع العلمي */
+.calc-scientific--visible {
+  max-height: 300px;
+  padding: 4px;
+}
+
+
+/* ------------------------------------------
+   شبكة الأزرار الأساسية (Main Grid)
+   ------------------------------------------
+   تقسيم 4 أعمدة:
+   ┌──────┬──────┬──────┬──────┐
+   │  C   │  ()  │  %   │  ÷   │
+   ├──────┼──────┼──────┼──────┤
+   │  7   │  8   │  9   │  ×   │
+   ├──────┼──────┼──────┼──────┤
+   │  5   │  6   │  4   │  −   │
+   ├──────┼──────┼──────┼──────┤
+   │  1   │  2   │  3   │  +   │
+   ├──────┼──────┼──────┼──────┤
+   │  ±   │  0   │  .   │  =   │
+   └──────┴──────┴──────┴──────┘
+   ------------------------------------------ */
+.calc-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2px;
+  padding: 4px;
+  background: var(--color-bg-primary);
+}
+
+
+/* ------------------------------------------
+   تنسيق الزر الأساسي (Base Button)
+   ------------------------------------------ */
+.calc-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 8px;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  position: relative;
+  overflow: hidden;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* تأثير الموجة عند النقر (Ripple) */
+.calc-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.15) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.calc-btn:active::after {
+  opacity: 1;
+}
+
+/* تأثير الضغط */
+.calc-btn:active {
+  transform: scale(0.95);
+}
+
+
+/* ------------------------------------------
+   أنواع الأزرار (Button Variants)
+   ------------------------------------------ */
+
+/* ── أزرار الأرقام ── */
+.calc-btn--number {
+  background: var(--color-bg-card);
+  color: var(--color-text-heading);
+}
+
+.calc-btn--number:hover {
+  background: var(--color-bg-hover);
+}
+
+/* ── أزرار العمليات الأساسية (+, -, ×, ÷) ── */
+.calc-btn--operator {
+  background: rgba(108, 92, 231, 0.15);
+  color: var(--color-accent-primary);
+  font-size: var(--font-size-lg);
+}
+
+.calc-btn--operator:hover {
+  background: rgba(108, 92, 231, 0.25);
+}
+
+/* العملية النشطة حالياً */
+.calc-btn--operator.active {
+  background: var(--color-accent-primary);
+  color: #ffffff;
+  box-shadow: var(--shadow-glow);
+}
+
+/* ── زر المساواة (=) ── */
+.calc-btn--equals {
+  background: var(--color-accent-gradient);
+  color: #ffffff;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+}
+
+.calc-btn--equals:hover {
+  filter: brightness(1.15);
+  box-shadow: var(--shadow-glow);
+}
+
+/* ── أزرار الوظائف (C, %, أقواس) ── */
+.calc-btn--function {
+  background: rgba(0, 206, 201, 0.1);
+  color: var(--color-accent-secondary);
+}
+
+.calc-btn--function:hover {
+  background: rgba(0, 206, 201, 0.2);
+}
+
+/* ── أزرار العمليات العلمية (sin, cos, log...) ── */
+.calc-btn--scientific {
+  background: rgba(116, 185, 255, 0.08);
+  color: var(--color-info);
+  font-size: var(--font-size-sm);
+  padding: 10px 4px;
+}
+
+.calc-btn--scientific:hover {
+  background: rgba(116, 185, 255, 0.18);
+}
+
+/* ── زر المسح (DEL / Backspace) ── */
+.calc-btn--delete {
+  background: rgba(225, 112, 85, 0.1);
+  color: var(--color-error);
+}
+
+.calc-btn--delete:hover {
+  background: rgba(225, 112, 85, 0.2);
+}
+
+
+/* ------------------------------------------
+   مؤشر وضع الزوايا (Deg / Rad)
+   ------------------------------------------ */
+.calc-angle-indicator {
+  position: absolute;
+  top: var(--spacing-sm);
+  left: var(--spacing-md);
+  font-size: var(--font-size-xs);
+  color: var(--color-accent-secondary);
+  background: rgba(0, 206, 201, 0.1);
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-family-mono);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 1;
+}
+
+.calc-angle-indicator:hover {
+  background: rgba(0, 206, 201, 0.2);
+}
+
+
+/* ------------------------------------------
+   حالة الخطأ (Error State)
+   ------------------------------------------ */
+.calc-display__result--error {
+  color: var(--color-error);
+  font-size: var(--font-size-lg);
+}
+
+
+/* ------------------------------------------
+   تأثيرات حركية إضافية
+   ------------------------------------------ */
+
+/* تأثير الظهور عند تحميل الآلة الحاسبة */
+.calculator {
+  animation: calcSlideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes calcSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* =============================================
+   أداة حل المعادلات (Equation Solver)
+   =============================================
+   هذا القسم يحتوي على تنسيقات:
+   - حاوية أداة الحل
+   - حقل الإدخال
+   - أزرار الحل والمسح
+   - أمثلة المعادلات
+   - بطاقات النتائج
+   - حالات الخطأ والمعلومات
+   ============================================= */
+
+/* ------------------------------------------
+   حاوية أداة حل المعادلات
+   ------------------------------------------ */
+.eq-solver {
+  margin-top: var(--spacing-lg);
+  background: var(--color-bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  box-shadow:
+    var(--shadow-md),
+    0 0 30px rgba(0, 206, 201, 0.06);
+  animation: calcSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.2s both;
+}
+
+/* عنوان القسم */
+.eq-solver__header {
+  padding: var(--spacing-md) var(--spacing-lg);
+  background: linear-gradient(135deg, rgba(0, 206, 201, 0.08) 0%, rgba(108, 92, 231, 0.08) 100%);
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.eq-solver__icon {
+  font-size: var(--font-size-lg);
+}
+
+.eq-solver__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-heading);
+}
+
+/* جسم أداة الحل */
+.eq-solver__body {
+  padding: var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+
+/* ------------------------------------------
+   حقل إدخال المعادلة
+   ------------------------------------------ */
+.eq-input-wrapper {
+  position: relative;
+}
+
+.eq-input {
+  width: 100%;
+  padding: 12px var(--spacing-md);
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-base);
+  color: var(--color-text-heading);
+  background: var(--color-bg-primary);
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  outline: none;
+  transition: all var(--transition-fast);
+  direction: ltr;         /* المعادلات الرياضية دائماً LTR */
+  text-align: left;
+}
+
+.eq-input::placeholder {
+  color: var(--color-text-muted);
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-sm);
+  direction: rtl;
+}
+
+/* حالة التركيز (Focus) */
+.eq-input:focus {
+  border-color: var(--color-accent-secondary);
+  box-shadow: 0 0 0 3px rgba(0, 206, 201, 0.15);
+}
+
+/* تلميح المتغير */
+.eq-input-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin-top: 4px;
+  text-align: right;
+}
+
+.eq-input-hint code {
+  background: var(--color-bg-hover);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: var(--font-family-mono);
+  color: var(--color-accent-secondary);
+}
+
+
+/* ------------------------------------------
+   أزرار الحل والمسح
+   ------------------------------------------ */
+.eq-buttons {
+  display: flex;
+  gap: var(--spacing-sm);
+}
+
+.eq-solve-btn {
+  flex: 1;
+  padding: 10px var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: #ffffff;
+  background: var(--color-accent-gradient);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+}
+
+.eq-solve-btn:hover {
+  filter: brightness(1.15);
+  box-shadow: var(--shadow-glow);
+  transform: translateY(-1px);
+}
+
+.eq-solve-btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.eq-clear-btn {
+  padding: 10px var(--spacing-md);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+}
+
+.eq-clear-btn:hover {
+  color: var(--color-error);
+  border-color: rgba(225, 112, 85, 0.3);
+  background: rgba(225, 112, 85, 0.08);
+}
+
+
+/* ------------------------------------------
+   أمثلة المعادلات (Quick Examples)
+   ------------------------------------------ */
+.eq-examples-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.eq-examples-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.eq-examples {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.eq-example-btn {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-family: var(--font-family-mono);
+  color: var(--color-text-secondary);
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full);
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.eq-example-btn:hover {
+  color: var(--color-accent-secondary);
+  border-color: rgba(0, 206, 201, 0.3);
+  background: rgba(0, 206, 201, 0.08);
+}
+
+.eq-example-btn--active {
+  color: var(--color-accent-secondary);
+  border-color: var(--color-accent-secondary);
+  background: rgba(0, 206, 201, 0.15);
+}
+
+
+/* ------------------------------------------
+   منطقة عرض النتائج
+   ------------------------------------------ */
+.eq-result-area {
+  min-height: 0;
+  transition: all var(--transition-slow);
+}
+
+.eq-result-area--visible {
+  min-height: 60px;
+}
+
+/* ── النتيجة الناجحة ── */
+.eq-result-success {
+  background: rgba(0, 184, 148, 0.06);
+  border: 1px solid rgba(0, 184, 148, 0.2);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  animation: eqFadeIn 0.3s ease;
+}
+
+.eq-result-header {
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  border-bottom: 1px solid rgba(0, 184, 148, 0.1);
+}
+
+.eq-result-icon {
+  font-size: var(--font-size-sm);
+}
+
+.eq-result-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-success);
+}
+
+.eq-solutions-list {
+  padding: var(--spacing-sm) var(--spacing-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+/* بطاقة الحل الفردية */
+.eq-solution-card {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(0, 184, 148, 0.04);
+  border-radius: var(--radius-sm);
+  animation: eqSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.eq-solution-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-accent-secondary);
+  min-width: 36px;
+  font-family: var(--font-family-primary);
+}
+
+.eq-solution-value {
+  font-family: var(--font-family-mono);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-heading);
+  direction: ltr;
+  word-break: break-all;
+}
+
+
+/* ── حالة الخطأ ── */
+.eq-result-error {
+  background: rgba(225, 112, 85, 0.06);
+  border: 1px solid rgba(225, 112, 85, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  animation: eqFadeIn 0.3s ease;
+  text-align: right;
+}
+
+.eq-error-icon {
+  font-size: var(--font-size-lg);
+  display: block;
+  margin-bottom: var(--spacing-xs);
+}
+
+.eq-error-text {
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  font-weight: var(--font-weight-medium);
+  margin-bottom: var(--spacing-sm);
+}
+
+.eq-error-hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  line-height: 1.6;
+}
+
+.eq-error-hint code {
+  background: var(--color-bg-hover);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-family: var(--font-family-mono);
+  color: var(--color-text-secondary);
+}
+
+
+/* ── حالة المعلومات ── */
+.eq-result-info {
+  background: rgba(116, 185, 255, 0.06);
+  border: 1px solid rgba(116, 185, 255, 0.2);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  text-align: center;
+  animation: eqFadeIn 0.3s ease;
+}
+
+.eq-result-info p {
+  font-size: var(--font-size-sm);
+  color: var(--color-info);
+}
+
+
+/* ------------------------------------------
+   تأثيرات حركية لأداة الحل
+   ------------------------------------------ */
+@keyframes eqFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes eqSlideIn {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

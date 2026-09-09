@@ -1,0 +1,192 @@
+/* =============================================
+   main.css — المتغيرات الأساسية والإعدادات العامة
+   =============================================
+   هذا الملف يحتوي على:
+   - متغيرات CSS المركزية (الألوان، الخطوط، الأحجام)
+   - إعادة ضبط التنسيقات الافتراضية (CSS Reset)
+   - الإعدادات العامة لعناصر الصفحة الأساسية
+   ============================================= */
+
+/* ------------------------------------------
+   متغيرات التصميم المركزية (Design Tokens)
+   ------------------------------------------ */
+:root {
+  /* ── ألوان الخلفيات ── */
+  --color-bg-primary: #0f0f1a;          /* خلفية الصفحة الرئيسية - أزرق داكن عميق */
+  --color-bg-secondary: #161625;        /* خلفية الأعمدة الجانبية */
+  --color-bg-content: #1a1a2e;          /* خلفية منطقة المحتوى الوسطى */
+  --color-bg-card: #1e1e36;             /* خلفية البطاقات والعناصر المرتفعة */
+  --color-bg-hover: #252542;            /* لون الخلفية عند التمرير (hover) */
+
+  /* ── ألوان النصوص ── */
+  --color-text-primary: #e8e8f0;        /* لون النص الأساسي - أبيض مائل للأزرق */
+  --color-text-secondary: #9e9eb8;      /* لون النص الثانوي - رمادي فاتح */
+  --color-text-muted: #6b6b85;          /* لون النص الخافت */
+  --color-text-heading: #ffffff;        /* لون العناوين */
+
+  /* ── ألوان العلامة التجارية والتميّز ── */
+  --color-accent-primary: #6c5ce7;      /* اللون الأساسي المميز - بنفسجي */
+  --color-accent-secondary: #00cec9;    /* اللون الثانوي المميز - تركوازي */
+  --color-accent-gradient: linear-gradient(135deg, #6c5ce7, #a29bfe);
+  --color-accent-glow: rgba(108, 92, 231, 0.3);
+
+  /* ── ألوان الحالات ── */
+  --color-success: #00b894;             /* لون النجاح - أخضر */
+  --color-warning: #fdcb6e;             /* لون التحذير - أصفر */
+  --color-error: #e17055;               /* لون الخطأ - أحمر برتقالي */
+  --color-info: #74b9ff;                /* لون المعلومات - أزرق فاتح */
+
+  /* ── ألوان الحدود والفواصل ── */
+  --color-border: rgba(255, 255, 255, 0.06);    /* حد شفاف خفيف */
+  --color-border-active: rgba(108, 92, 231, 0.5); /* حد العنصر النشط */
+  --color-divider: rgba(255, 255, 255, 0.04);   /* فاصل شفاف */
+
+  /* ── الخطوط ── */
+  --font-family-primary: 'Tajawal', 'Segoe UI', sans-serif;   /* الخط الأساسي - يدعم العربية */
+  --font-family-mono: 'IBM Plex Mono', 'Courier New', monospace; /* خط الآلة الحاسبة */
+
+  /* ── أحجام الخطوط ── */
+  --font-size-xs: 0.75rem;    /* 12px */
+  --font-size-sm: 0.875rem;   /* 14px */
+  --font-size-base: 1rem;     /* 16px */
+  --font-size-md: 1.125rem;   /* 18px */
+  --font-size-lg: 1.25rem;    /* 20px */
+  --font-size-xl: 1.5rem;     /* 24px */
+  --font-size-2xl: 2rem;      /* 32px */
+
+  /* ── أوزان الخطوط ── */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
+
+  /* ── المسافات ── */
+  --spacing-xs: 0.25rem;      /* 4px */
+  --spacing-sm: 0.5rem;       /* 8px */
+  --spacing-md: 1rem;         /* 16px */
+  --spacing-lg: 1.5rem;       /* 24px */
+  --spacing-xl: 2rem;         /* 32px */
+  --spacing-2xl: 3rem;        /* 48px */
+
+  /* ── الانحناءات (Border Radius) ── */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  /* ── الظلال ── */
+  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow-glow: 0 0 20px var(--color-accent-glow);
+
+  /* ── الانتقالات (Transitions) ── */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* ── أبعاد التخطيط الأساسية ── */
+  --sidebar-width: 360px;       /* عرض العمود الأيمن (القائمة) */
+  --tools-width: 320px;         /* عرض العمود الأيسر (الآلة الحاسبة) */
+  --header-height: 60px;        /* ارتفاع الشريط العلوي */
+}
+
+
+/* ------------------------------------------
+   إعادة ضبط التنسيقات الافتراضية (CSS Reset)
+   ------------------------------------------ */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------
+   التنسيقات الأساسية للصفحة
+   ------------------------------------------ */
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-family-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ------------------------------------------
+   تنسيقات العناصر الأساسية المشتركة
+   ------------------------------------------ */
+
+/* العناوين */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-heading);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.3;
+}
+
+/* الروابط */
+a {
+  color: var(--color-accent-secondary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+a:hover {
+  color: var(--color-accent-primary);
+}
+
+/* القوائم */
+ul, ol {
+  list-style: none;
+}
+
+/* الصور */
+img {
+  max-width: 100%;
+  display: block;
+}
+
+/* الأزرار - تنسيق أساسي */
+button {
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  background: none;
+  color: inherit;
+}
+
+/* شريط التمرير المخصص (Scrollbar) للمتصفحات المدعومة */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-text-muted);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-text-secondary);
+}
+
+/* تأثير التحديد (Selection) */
+::selection {
+  background-color: var(--color-accent-primary);
+  color: #ffffff;
+}
