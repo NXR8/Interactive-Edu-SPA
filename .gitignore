@@ -16,6 +16,9 @@ edursc.db
 # Playwright / test logs
 .playwright-mcp/
 
+# Generated report (recreate with generate_report.py)
+report.pdf
+
 # OS
 .DS_Store
 Thumbs.db
